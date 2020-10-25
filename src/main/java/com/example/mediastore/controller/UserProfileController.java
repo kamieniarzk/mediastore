@@ -2,12 +2,8 @@ package com.example.mediastore.controller;
 
 import com.example.mediastore.model.UserProfile;
 import com.example.mediastore.service.UserProfileService;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.UUID;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/userprofile")
@@ -18,10 +14,7 @@ public class UserProfileController {
     public UserProfileController(UserProfileService userProfileService) {
         this.userProfileService = userProfileService;
     }
-    @GetMapping
-    public List<UserProfile> getUserProfiles() {
-        return userProfileService.getUserProfiles();
-    }
+
 
 
 }

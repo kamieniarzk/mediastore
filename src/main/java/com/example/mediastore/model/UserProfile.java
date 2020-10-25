@@ -1,41 +1,73 @@
 package com.example.mediastore.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import javax.persistence.*;
+import java.util.*;
 
 
-@AllArgsConstructor
-public class UserProfile {
-    @Getter
-    private final UUID id;
+@Data
+@Entity
+public class UserProfile implements UserDetails {
+    @Id
+    private final long id;
+    private final String username;
+    private final String password;
+    private final boolean isAccountNonExpired;
+    private final boolean isAccountNonLocked;
+    private final boolean isCredentialsNonExpired;
+    private final boolean isEnabled;
 
-    @Getter
-    @Setter
-    private String username;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "authorities", joinColumns=@JoinColumn(name="id"))
+    private final Set<SimpleGrantedAuthority> grantedAuthorities;
 
-    private Optional<String> imgUrl;
-
-    public Optional<String> getImgUrl() {
-        return imgUrl;
+    public UserProfile(long id, Set<SimpleGrantedAuthority> grantedAuthorities,
+                       String username, String password, boolean isAccountNonExpired,
+                       boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled) {
+        this.id = id;
+        this.grantedAuthorities = grantedAuthorities;
+        this.username = username;
+        this.password = password;
+        this.isAccountNonExpired = isAccountNonExpired;
+        this.isAccountNonLocked = isAccountNonLocked;
+        this.isCredentialsNonExpired = isCredentialsNonExpired;
+        this.isEnabled = isEnabled;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserProfile that = (UserProfile) o;
-        return id.equals(that.id) &&
-                username.equals(that.username) &&
-                Objects.equals(imgUrl, that.imgUrl);
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, username, imgUrl);
+    public String getPassword() {
+        return null;
     }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
 }
